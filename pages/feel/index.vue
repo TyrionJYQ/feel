@@ -1,26 +1,29 @@
 <template>
 	<view class="content">
 		<u-form :model="form" ref="uForm" label-width="120">
-			<u-form-item label="心情" prop="feel" left-icon="heart">
-				<u-input v-model="form.feel" placeholder="请输入心情" />
+			<u-form-item label="心情" prop="feel" left-icon="heart" :left-icon-style="leftIconStyle">
+				<!-- <u-input v-model="form.feel" placeholder="请输入心情" /> -->
+				<u-input v-model="form.feel" type="select" placeholder="请选择心情" @click="show = true" />
 			</u-form-item>
-			<u-form-item label="天气" prop="weather">
+			<u-form-item label="天气" prop="weather" left-icon="moments" :left-icon-style="leftIconStyle">
 				<u-input v-model="form.weather" placeholder="请输入天气" />
 			</u-form-item>
-			<u-form-item label="吐槽" prop="talk">
+			<u-form-item label="吐槽" prop="talk" left-icon="chat" :left-icon-style="leftIconStyle">
 				<u-input v-model="form.talk" placeholder="请开始吐槽" />
 			</u-form-item>
-			<u-form-item label="日期">
+			<u-form-item label="日期" left-icon="calendar" :left-icon-style="leftIconStyle">
 				<u-input v-model="form.date" disabled />
 			</u-form-item>
 		</u-form>
-		<u-button @click="submit" type="success">{{btnText}}</u-button>
+		<u-button @click="submit" type="success">{{btnText }}</u-button>
 		<u-top-tips ref="uTips"></u-top-tips>
+		<u-action-sheet :list="feelList" v-model="show" @click="actionSheetCallback"></u-action-sheet>
 	</view>
 </template>
 
 <script>
 	import dateToString from '../../utils/dateUtil'
+	import dbFeel from '../../utils/dbFeel.js'
 	import {
 		mapActions
 	} from 'vuex'
@@ -28,13 +31,42 @@
 	export default {
 		data() {
 			return {
+				feelList: [
+					{
+						text: '开心'
+					},
+					{
+						text: '悲伤'
+					},
+					{
+						text: '激动'
+					},
+					{
+						text: '烦躁'
+					},
+					{
+						text: '纠结'
+					},
+					{
+						text: '厌恶'
+					},
+					{
+						text: '焦虑'
+					}
+				],
+				show: false,
 				form: {
 					feel: '',
 					weather: '',
 					talk: '',
+					feel: '',
 					date: dateToString(new Date()),
+
 				},
-				rules: {}
+				rules: {},
+				leftIconStyle: {
+					color: '#19be6b'
+				}
 			};
 		},
 
@@ -45,7 +77,18 @@
 		},
 
 		methods: {
-			...mapActions(['getDayNote']),
+			...mapActions(['getDayNote', 'setButtonType']),
+
+			_initStyle() {
+				this.leftIconStyle = {
+					color: '#19be6b'
+				}
+			},
+
+			_initPage() {
+				this._genRules()
+
+			},
 			_genRules() {
 				let trigger = ['change', 'blur'],
 					filed2text = {
@@ -63,44 +106,48 @@
 					}]
 				}
 			},
+			_isInfoChange() {
+
+			},
+
+			actionSheetCallback(index) {
+				this.form.feel = this.feelList[index].text;
+			},
 
 			submit() {
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
-						console.log('验证通过');
-						const db = wx.cloud.database()
+						let db = dbFeel.db,
+							title, type
 						const {
 							feel,
 							weather,
 							talk,
 							date
 						} = this.form
-						db.collection('day_feels').add({
-							data: {
-								feel,
-								weather,
-								talk,
-								date
-							},
-							success: res => {
-								// 在返回结果中会包含新创建的记录的 _id
-								const isEdit = this.btnText === '重新提交' ? true : false
-								this.$refs.uTips.show({
-									title: isEdit ? '編輯成功' : '新增成功',
-									type: 'success',
-									duration: '2300'
-								});
-								!isEdit && this.$store.dispatch('setButtonType', 1)
-								console.log('[数据库] [新增记录] 成功，记录 _id: ', res._id)
-
-							},
-							fail: err => {
-								wx.showToast({
-									icon: 'none',
-									title: '新增记录失败'
-								})
-								console.error('[数据库] [新增记录] 失败：', err)
+						// 获取方法
+						const reqMethodName = this.btnText === '提交' ? 'addFeel' : 'updateFeel'
+						dbFeel[reqMethodName]({
+							feel,
+							weather,
+							talk,
+							date,
+							openid: this.$store.state.openid
+						}).then(res => {
+							if (res && res.errMsg === "collection.add:ok") {
+								type = 'success'
+								title = '提交成功'
+								this.setButtonType(1)
+							} else {
+								title = '未知异常'
+								type = 'error'
 							}
+							this.$refs.uTips.show({
+								title,
+								type,
+								duration: '2300'
+							});
+
 						})
 					} else {
 						return console.log('验证失败');
@@ -110,7 +157,6 @@
 		},
 
 		onShow() {
-			this._genRules()
 			this.getDayNote().then(d => {
 				if (d) {
 					this.form.feel = d.feel
@@ -121,6 +167,7 @@
 		},
 
 		onReady() {
+			this._initPage()
 			this.$refs.uForm.setRules(this.rules);
 		}
 	};

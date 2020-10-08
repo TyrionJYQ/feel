@@ -1,6 +1,5 @@
 const dateToString = date =>  {
-	debugger
-    const year = date.getFullYear();
+		const year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
     // let hour = date.getHours();

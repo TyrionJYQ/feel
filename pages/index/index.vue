@@ -8,6 +8,7 @@
 
 <script>
 	import { mapActions  } from 'vuex'
+	import uCharts from '@/components/u-charts/u-charts.js';
 	const app = getApp()
 	export default {
 		data() {

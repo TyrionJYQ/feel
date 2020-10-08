@@ -21,6 +21,12 @@
 			"style": {
 				"navigationBarTitleText": "兴晴"
 			}
+		},
+		{
+			"path": "pages/newTodo/index",
+			"style": {
+				"navigationBarTitleText": "新建事项"
+			}
 		}
 	],
 	"globalStyle": {
@@ -34,22 +40,21 @@
 		"color": "#F8F8F8",
 		"selectedColor": "#F0AD4E",
 		"backgroundColor": "#19BE6B",
-		"fontSize": "18px",
 		"list": [{
 				"text": "首页",
-				"iconPath": "static/imgs/pencil.png",
-				"selectedIconPath": "static/imgs/pencil.png",
+				"iconPath": "static/imgs/home(2).png",
+				"selectedIconPath": "static/imgs/home.png",
 				"pagePath": "pages/index/index"
 			},
 			{
 				"text": "新增",
-				"iconPath": "static/imgs/pencil.png",
-				"selectedIconPath": "static/imgs/pencil.png",
+				"iconPath": "static/imgs/note(2).png",
+				"selectedIconPath": "static/imgs/note.png",
 				"pagePath": "pages/feel/index"
 			}, {
 				"text": "待办",
-				"iconPath": "static/imgs/pencil.png",
-				"selectedIconPath": "static/imgs/pencil.png",
+				"iconPath": "static/imgs/todo(2).png",
+				"selectedIconPath": "static/imgs/todo.png",
 				"pagePath": "pages/todo/index"
 			}
 		]
