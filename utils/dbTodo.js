@@ -19,31 +19,34 @@ class DbTodo {
 					date,
 					remark,
 					createTime,
-					status: 0
+					isComplete: false
 				}
 			})
 		}
-
-		updateFeel(param) {
-			const {
-				feel,
-				weather,
-				talk,
-				date,
-				openid
-			} = param;
-			// 先删除
-			return this.db.where({
-				_openid:openid,
-				date
-			}).remove().then(res => {
-				return this.addFeel(param)
-			})
-		}
+		
 		
 		// 根据状态获取待办事项
-		getTodosByStatus() {
-			
+		getTodos(openid) {
+			return this.db.where({
+				_openid: openid
+			}).get()
+		}
+		
+		// 改变待办
+		changeTodo(i) {
+			this.db.doc(i._id).update({
+				data: {
+					isComplete: i.isComplete,
+					text: i.text,
+					list: i.list,
+					date: i.date,
+					remark: i.remark,
+					createTime: i.createTime
+				},
+				success(res) {
+					console.log(res)
+				}
+			})
 		}
 }
 
