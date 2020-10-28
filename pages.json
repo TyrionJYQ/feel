@@ -27,6 +27,12 @@
 			"style": {
 				"navigationBarTitleText": "新建事项"
 			}
+		},
+		{
+			"path": "pages/list/index",
+			"style": {
+				"navigationBarTitleText": "清单管理"
+			}
 		}
 	],
 	"globalStyle": {
