@@ -22,7 +22,6 @@ class DbFeel {
 		}
 
 		updateFeel(param) {
-			debugger
 			const {
 				feel,
 				weather,
