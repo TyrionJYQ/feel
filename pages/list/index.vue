@@ -83,6 +83,8 @@
 							type: 'warning',
 						})
 					}
+				}).then(() => {
+					this.getList()
 				})
 			},
 
