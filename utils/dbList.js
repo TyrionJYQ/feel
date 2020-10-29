@@ -39,7 +39,11 @@ class DbTodo {
 				}
 			).get()
 			console.log(res);
-			debugger
+			if(res && res.data && res.data.length > 0) {
+				return {
+					errMsg: '当前清单已关联待办事项，无法删除'
+				}
+			}
 			return this.db.doc(_id).remove()
 		}
 }
