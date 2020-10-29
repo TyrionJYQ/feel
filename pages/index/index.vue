@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content bg-color m15">
 		<view class="text-area">
 		首页
 		</view>

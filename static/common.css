@@ -1,0 +1,54 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-items: flex-end;
+	padding: 15rpx;
+	background-color: #EEEEEE;
+}
+
+.bg-color {
+	background-color: #EEEEEE;
+}
+
+.bg-white {
+	background-color: #FFFFFF;
+}
+
+.m15 {
+	margin: 15rpx;
+}
+
+.mb15 {
+	margin-bottom: 15rpx;
+}
+
+.mtb15 {
+	margin: 15rpx 0;
+}
+
+.p15 {
+	padding: 15rpx;
+}
+
+.p20 {
+	padding: 20rpx;
+}
+
+.flex {
+	display: flex;
+}
+
+
+.br10 {
+	border-radius: 10rpx;
+}
+
+.f1 {
+	flex: 1;
+}
+
+
+.over-auto {
+	overflow: auto;
+}

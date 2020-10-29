@@ -1,7 +1,7 @@
 <template>
-	<view class="content">
+	<view class="wrapper">
 		<u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
-		<view class="list">
+		<view class="list f1 br10 mtb15 bg-white over-auto br10">
 			<template v-if="listData.length > 0">
 				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
 				 :options="options">
@@ -19,9 +19,9 @@
 			<view class="flex1 mr10">
 				<u-button type="success" @click="goToNewPage">新建</u-button>
 			</view>
-			<view class="flex1 ml10">
+			<!-- <view class="flex1 ml10">
 				<u-button type="success" @click="goToList">清单</u-button>
-			</view>
+			</view> -->
 		</view>
 		
 		<u-modal v-model="show" :title-style="{color: 'red'}" show-cancel-button @confirm="onConfirm" title="编辑">
@@ -173,13 +173,9 @@
 		height: 100%;
 	}
 
-	.content {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-		padding: 10rpx;
-	}
-
+	
+	
+	
 	.list {
 		flex: 1;
 		align-items: center;

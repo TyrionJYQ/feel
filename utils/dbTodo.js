@@ -50,8 +50,8 @@ class DbTodo {
 		}
 		
 		// 删除待办事项
-		delTodoById(id) {
-			this.db.doc(id).remove()
+		async delTodoById(id) {
+			return this.db.doc(id).remove()
 		}
 }
 
