@@ -1,6 +1,6 @@
 <template>
-	<view class="content">
-		<view class="list-wrapper flex1">
+	<view class="wrapper">
+		<view class="list-wrapper f1 mtb15 p20 bg-white over-auto br10">
 			<template v-if="list.length > 0">
 				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in list" :key="i._id" @click="click" @open="open"
 				 :options="options" vibrate-short>
@@ -19,6 +19,7 @@
 				<u-input v-model="name" placeholder="请输入"></u-input>
 			</view>
 		</u-modal>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -30,14 +31,12 @@
 				list: [],
 				show: false,
 				name: '',
-				options: [
-					{
-						text: '删除',
-						style: {
-							backgroundColor: '#dd524d'
-						}
+				options: [{
+					text: '删除',
+					style: {
+						backgroundColor: '#dd524d'
 					}
-				]
+				}]
 			}
 		},
 		methods: {
@@ -47,7 +46,7 @@
 					console.log(res)
 					if (res.errMsg === 'collection.get:ok') {
 						this.list = res.data.map(i => {
-							i.show = true;
+							i.show = false;
 							return i
 						})
 					}
@@ -57,22 +56,36 @@
 
 			click(index, index1) {
 				// 删除提示
+				const _this = this
 				uni.showModal({
 					title: '提示',
 					content: `是否删除清单${this.list[index].name}`,
 					success(res) {
-						res.confirm &&  this._del(this.list[index])
+						res.confirm && _this._del(_this.list[index])
 					}
 				})
-				
-				
+
+
 			},
-			
+
 			// 删除
 			_del(item) {
-				
+				dbList.delTodoById({_id:item._id,_openid: this.$store.state.openid}).then(res => {
+					console.log(res);
+					if (res && res.errMsg === 'document.remove:ok') {
+						this.$refs.uToast.show({
+							title: '删除成功',
+							type: 'success',
+						})
+					} else {
+						this.$refs.uToast.show({
+							title: res.errMsg,
+							type: 'warning',
+						})
+					}
+				})
 			},
-			
+
 			createNewItem() {
 				this.show = true
 			},
@@ -119,17 +132,6 @@
 </script>
 
 <style scoped>
-	.content {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-		padding: 10rpx;
-	}
-
-	.flex1 {
-		flex: 1;
-	}
-
 	.slot-content {
 		font-size: 14rpx;
 		color: $u-content-color;

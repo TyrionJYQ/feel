@@ -1,3 +1,4 @@
+import dbTodo from './dbTodo.js'
 class DbTodo {
 	constructor(arg) {
 		this.db = wx.cloud.database().collection('feel_list')
@@ -26,8 +27,20 @@ class DbTodo {
 		
 		
 		// 删除待办事项
-		delTodoById(id) {
-			this.db.doc(id).remove()
+		async delTodoById({_id, _openid}) {
+			// 查询是否关联待办任务
+			debugger
+			let res = await dbTodo.db.where(
+				{
+					list: {
+						_openid,
+						_id
+					}
+				}
+			).get()
+			console.log(res);
+			debugger
+			return this.db.doc(_id).remove()
 		}
 }
 

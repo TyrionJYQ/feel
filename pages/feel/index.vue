@@ -1,21 +1,23 @@
 <template>
-	<view class="content">
-		<u-form :model="form" ref="uForm" label-width="120">
-			<u-form-item label="心情" prop="feel" left-icon="heart" :left-icon-style="leftIconStyle">
-				<!-- <u-input v-model="form.feel" placeholder="请输入心情" /> -->
-				<u-input v-model="form.feel" type="select" placeholder="请选择心情" @click="show = true" />
-			</u-form-item>
-			<u-form-item label="天气" prop="weather" left-icon="moments" :left-icon-style="leftIconStyle">
-				<u-input v-model="form.weather" placeholder="请输入天气" />
-			</u-form-item>
-			<u-form-item label="吐槽" prop="talk" left-icon="chat" :left-icon-style="leftIconStyle">
-				<u-input v-model="form.talk" placeholder="请开始吐槽" />
-			</u-form-item>
-			<u-form-item label="日期" left-icon="calendar" :left-icon-style="leftIconStyle">
-				<u-input v-model="form.date" disabled />
-			</u-form-item>
-		</u-form>
-		<u-button @click="submit" type="success">{{btnText }}</u-button>
+	<view class="wrapper">
+		<view class="bg-white p20 f1 mb15 br10">
+			<u-form :model="form" ref="uForm" label-width="120">
+				<u-form-item label="心情" prop="feel" left-icon="heart" :left-icon-style="leftIconStyle">
+					<u-input v-model="form.feel" type="select" placeholder="请选择心情" @click="show = true" />
+				</u-form-item>
+				<u-form-item label="天气" prop="weather" left-icon="moments" :left-icon-style="leftIconStyle">
+					<u-input v-model="form.weather" placeholder="请输入天气" />
+				</u-form-item>
+				<u-form-item label="吐槽" prop="talk" left-icon="chat" :left-icon-style="leftIconStyle">
+					<u-input v-model="form.talk" placeholder="请开始吐槽" />
+				</u-form-item>
+				<u-form-item label="日期" left-icon="calendar" :left-icon-style="leftIconStyle">
+					<u-input v-model="form.date" disabled />
+				</u-form-item>
+			</u-form>
+		</view>
+
+		<u-button @click="submit" type="success" class="btn">{{btnText }}</u-button>
 		<u-top-tips ref="uTips"></u-top-tips>
 		<u-action-sheet :list="feelList" v-model="show" @click="actionSheetCallback"></u-action-sheet>
 	</view>
@@ -31,8 +33,7 @@
 	export default {
 		data() {
 			return {
-				feelList: [
-					{
+				feelList: [{
 						text: '开心'
 					},
 					{
@@ -175,6 +176,9 @@
 
 <style>
 	.content {
-		padding: 10rpx 30rpx;
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		justify-items: flex-end;
 	}
 </style>

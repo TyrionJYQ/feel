@@ -1,21 +1,26 @@
 <template>
-	<view class="content">
-		<u-field v-model="text" label="待办" placeholder="请填写待办" required>
-		</u-field>
-		<u-field v-model="listItem.name" label="清单" 
-				placeholder="请选择清单" 
-				disabled right-icon="arrow-down-fill" 
-				@click="showAction = true"
-		 required>
-		</u-field>
-		<u-field v-model="date" label="日期" placeholder="请选择日期" @click="showCalendar = true" required>
-		</u-field>
-		<u-field v-model="remark" label="备注" placeholder="请输入备注">
-		</u-field>
+	<view class="wrapper">
+		<view class="f1 mtb15 bg-white">
+			<u-field v-model="text" label="待办" placeholder="请填写待办" required>
+			</u-field>
+			<u-field v-model="listItem.name" label="清单" 
+					placeholder="请选择清单" 
+					disabled right-icon="arrow-down-fill" 
+					@click="showAction = true"
+			 required>
+			</u-field>
+			<u-field v-model="date" label="日期" placeholder="请选择日期" @click="showCalendar = true" required>
+			</u-field>
+			<u-field v-model="remark" label="备注" placeholder="请输入备注">
+			</u-field>
+		</view>
+		<view>
+			<u-button @click="submit" type="success">确定</u-button>
+		</view>
 
 		<u-calendar v-model="showCalendar" mode="date" @change="change" :maxDate="maxDate" :minDate="minDate"></u-calendar>
 		<u-top-tips ref="uTips"></u-top-tips>
-		<u-button @click="submit" type="success">确定</u-button>
+		
 		<u-action-sheet @click="clickItem" :list="list" v-model="showAction"></u-action-sheet>
 	</view>
 

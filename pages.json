@@ -13,13 +13,13 @@
 		{
 			"path": "pages/feel/index",
 			"style": {
-				"navigationBarTitleText": "兴晴"
+				"navigationBarTitleText": "添加心情"
 			}
 		},
 		{
-			"path": "pages/todo/index",
+			"path": "pages/plan/index",
 			"style": {
-				"navigationBarTitleText": "兴晴"
+				"navigationBarTitleText": "待办"
 			}
 		},
 		{
@@ -36,7 +36,7 @@
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "#FFFFFF",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#18B566",
 		"backgroundColor": "#71D5A1",
@@ -45,23 +45,29 @@
 	"tabBar": {
 		"color": "#F8F8F8",
 		"selectedColor": "#F0AD4E",
-		"backgroundColor": "#19BE6B",
+		"backgroundColor": "#26001c",
 		"list": [{
 				"text": "首页",
-				"iconPath": "static/imgs/home(2).png",
+				"iconPath": "static/imgs/home_default.png",
 				"selectedIconPath": "static/imgs/home.png",
 				"pagePath": "pages/index/index"
 			},
 			{
 				"text": "新增",
-				"iconPath": "static/imgs/note(2).png",
+				"iconPath": "static/imgs/note_default.png",
 				"selectedIconPath": "static/imgs/note.png",
 				"pagePath": "pages/feel/index"
 			}, {
 				"text": "待办",
-				"iconPath": "static/imgs/todo(2).png",
-				"selectedIconPath": "static/imgs/todo.png",
-				"pagePath": "pages/todo/index"
+				"iconPath": "static/imgs/plan_default.png",
+				"selectedIconPath": "static/imgs/plan.png",
+				"pagePath": "pages/plan/index"
+			},
+			{
+				"text": "清单",
+				"iconPath": "static/imgs/class_default.png",
+				"selectedIconPath": "static/imgs/class.png",
+				"pagePath": "pages/list/index"
 			}
 		]
 	}
