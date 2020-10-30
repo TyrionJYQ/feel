@@ -46,5 +46,15 @@ export default {
 		commit
 	}, type) {
 		commit(types.SET_BUTTON_TYPE, type)
+	},
+	
+	// 设置当前清单详情id
+	setList({commit}, list) {
+		commit(types.SET_LIST, list)
+	},
+	
+	// 设置当前清单列表
+	setListData({commit}, list) {
+		commit(types.SET_LIST_DATA, list)
 	}
 }

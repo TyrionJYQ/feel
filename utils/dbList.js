@@ -29,7 +29,6 @@ class DbTodo {
 		// 删除待办事项
 		async delTodoById({_id, _openid}) {
 			// 查询是否关联待办任务
-			debugger
 			let res = await dbTodo.db.where(
 				{
 					list: {

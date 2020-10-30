@@ -26,15 +26,21 @@ class DbTodo {
 		
 		
 		// 根据状态获取待办事项
-		getTodos(openid) {
-			return this.db.where({
-				_openid: openid
-			}).get()
+		getTodos(_openid, listId) {
+			let params = {
+				_openid,
+			}
+			if(listId) {
+				params.list = {
+					_id: listId
+				}
+			}
+			return this.db.where(params).get()
 		}
 		
 		// 改变待办
 		changeTodo(i) {
-			this.db.doc(i._id).update({
+			return this.db.doc(i._id).update({
 				data: {
 					isComplete: i.isComplete,
 					text: i.text,
@@ -42,9 +48,6 @@ class DbTodo {
 					date: i.date,
 					remark: i.remark,
 					createTime: i.createTime
-				},
-				success(res) {
-					console.log(res)
 				}
 			})
 		}

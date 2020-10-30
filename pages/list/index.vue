@@ -1,11 +1,11 @@
 <template>
 	<view class="wrapper">
 		<view class="list-wrapper f1 mtb15 p20 bg-white over-auto br10">
-			<template v-if="list.length > 0">
-				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in list" :key="i._id" @click="click" @open="open"
+			<template v-if="listData.length > 0">
+				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
 				 :options="options" vibrate-short>
 					<view class="u-border-bottom">
-						<view class="item title-wrap">
+						<view class="item title-wrap" @click="goDetail(index)">
 							<text class="title line-1">{{i.name}}</text>
 						</view>
 					</view>
@@ -25,10 +25,11 @@
 
 <script>
 	import dbList from '../../utils/dbList.js'
+	import {mapActions, mapState} from 'vuex'
+	
 	export default {
 		data() {
 			return {
-				list: [],
 				show: false,
 				name: '',
 				options: [{
@@ -39,17 +40,25 @@
 				}]
 			}
 		},
+		
+		computed:{
+			...mapState(['listData'])
+		},
+		
 		methods: {
+			...mapActions(['setList', 'setListData']),
 			// 获取清单列表
 			getList() {
 				dbList.getList(this.$store.openid).then(res => {
 					console.log(res)
 					if (res.errMsg === 'collection.get:ok') {
-						this.list = res.data.map(i => {
+						res.data = res.data.map(i => {
 							i.show = false;
 							return i
 						})
+						this.setListData(res.data)
 					}
+					
 
 				})
 			},
@@ -59,13 +68,20 @@
 				const _this = this
 				uni.showModal({
 					title: '提示',
-					content: `是否删除清单${this.list[index].name}`,
+					content: `是否删除清单${this.listData[index].name}`,
 					success(res) {
-						res.confirm && _this._del(_this.list[index])
+						res.confirm && _this._del(_this.listData[index])
 					}
 				})
 
 
+			},
+			
+			goDetail(i) {
+				this.setList(this.listData[i])
+				wx.navigateTo({
+					url: '/pages/list-detail/index'
+				})
 			},
 
 			// 删除
@@ -93,9 +109,9 @@
 			},
 
 			open(index) {
-				this.list[index].show = true;
-				this.list.map((val, idx) => {
-					if (index != idx) this.list[idx].show = false;
+				this.listData[index].show = true;
+				this.listData.map((val, idx) => {
+					if (index != idx) this.listData[idx].show = false;
 				})
 			},
 			// 创建清单
