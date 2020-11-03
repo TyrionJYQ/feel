@@ -12,6 +12,7 @@ const store = new Vuex.Store({
 		buttonType: 0,
 		list: Object.create(null), //选中清单
 		listData: [], // 所有清单
+		todoList: [], // 所有待办任务
 	},
 	mutations,
 	actions,

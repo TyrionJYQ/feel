@@ -18,5 +18,10 @@ export default {
 	// 设置清单列表
 	[types.SET_LIST_DATA](state, listData) {
 		state.listData = listData
+	},
+	
+	// 获取待办事项
+	[types.GET_TODO_LIST](state, todoList) {
+		state.todoList = todoList
 	}
 }

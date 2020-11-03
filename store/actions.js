@@ -1,5 +1,6 @@
 import * as types from './mutation-types'
 import dateToString from '../utils/dateUtil'
+
 export default {
 	async getUserOpenId({
 		commit,
@@ -56,5 +57,11 @@ export default {
 	// 设置当前清单列表
 	setListData({commit}, list) {
 		commit(types.SET_LIST_DATA, list)
+	},
+	
+	// 获取待办列表
+	// 设置当前清单列表
+	getTodoList({commit}, list) {
+		commit(types.GET_TODO_LIST, list)
 	}
 }

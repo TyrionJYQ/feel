@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
-		<view class="list f1 br10 mtb15 bg-white over-auto br10">
+		<view class="list f1 br10 mtb15 bg-white over-auto br10 flex">
 			<template v-if="listData.length > 0">
 				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
 				 :options="options">
@@ -27,10 +27,18 @@
 <script>
 	import dbTodo from '../../utils/dbTodo.js'
 	export default {
+		props: {
+			todos: {
+				type: Array,
+				default() {
+					return []
+				}
+			}
+		},
 		data() {
 			return {
 				show: false,
-				todos: [],
+				// todos: [],
 				classify: [{
 					name: '全部',
 					
@@ -188,7 +196,8 @@
 		},
 
 		created() {
-			this.getList()
+			this._setCount()
+			// this.getList()
 		}
 	}
 </script>
