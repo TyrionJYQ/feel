@@ -1,52 +1,59 @@
 <template>
-	<view class="wrapper">
-	<!-- <view> -->
-		<!-- <u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
-		<view class="list f1 br10 mtb15 bg-white over-auto br10">
+	<view>
+		<u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
+		<view class="list f1 br10 mtb15 bg-white over-auto br10 flex">
 			<template v-if="listData.length > 0">
 				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
 				 :options="options">
 					<view class="u-border-bottom">
 						<view class="item title-wrap" @click="onClickItem(index)">
 							<u-checkbox v-model="i.isComplete" shape="circle" active-color="#19be6b"></u-checkbox>
-							<text class="title line-1"  :class="{'line': i.isComplete}">{{i.text}}</text>
+							<text class="title line-1" :class="{'line': i.isComplete}">{{i.text}}</text>
 						</view>
 					</view>
 				</u-swipe-action>
 			</template>
-			<u-empty text="没有数据" mode="list" v-else icon-color="#19be6b" color="#19be6b"></u-empty>
+			<u-empty text="没有数据" mode="list" v-else icon-color="#19be6b" color="#19be6b" count="acount"></u-empty>
 		</view>
-		<view class="flex">
-			<view class="flex1 mr10">
-				<u-button type="success" @click="goToNewPage">新建</u-button>
-			</view>
-		</view>
+
 		<u-modal v-model="show" :title-style="{color: 'red'}" show-cancel-button @confirm="onConfirm" title="编辑">
 			<view class="slot-content">
 				<u-input v-model="content"></u-input>
 			</view>
-		</u-modal> -->
-		<feel-todo-list/>
+		</u-modal>
 	</view>
 </template>
 
 <script>
 	import dbTodo from '../../utils/dbTodo.js'
 	export default {
+		props: {
+			todos: {
+				type: Array,
+				default() {
+					return []
+				}
+			}
+		},
 		data() {
 			return {
 				show: false,
+				// todos: [],
 				classify: [{
-					name: '全部'
+					name: '全部',
+					
+
 				}, {
-					name: '已完成'
+					name: '已完成',
+					
 				}, {
-					name: '待办'
+					name: '待办',
+					
 				}],
 
 				content: '',
 				editIndex: 0,
-				todos: [],
+
 				current: 0,
 				scrollTop: 0,
 				old: {
@@ -69,6 +76,7 @@
 
 		},
 
+
 		computed: {
 			listData() {
 				switch (this.current) {
@@ -79,6 +87,10 @@
 					case 2:
 						return this.todos.filter(todo => !todo.isComplete)
 				}
+			},
+
+			listId() {
+				return this.$store.state.list._id
 			}
 		},
 		methods: {
@@ -88,10 +100,10 @@
 
 			goToNewPage() {
 				wx.navigateTo({
-					url: '/pages/new-todo/index'
+					url: '/pages/newTodo/index'
 				})
 			},
-			
+
 			goToList() {
 				wx.navigateTo({
 					url: '/pages/list/index'
@@ -105,15 +117,15 @@
 					this._edit(index)
 				}
 			},
-			
+
 			// 编辑
 			_edit(i) {
 				this.editIndex = i
 				this.content = this.listData[i].text
 				this.show = true
 			},
-			
-			
+
+
 			// 删除
 			_del(item) {
 				const i = this.todos.findIndex(t => t._id === item._id)
@@ -121,16 +133,19 @@
 				dbTodo.delTodoById(this.listData[i]._id)
 				// 物理删除
 				this.todos.splice(i, 1)
-				
+
 			},
-			
-			
-			
+
+
+
 
 			onClickItem(i) {
 				let _ = this.listData[i]
-				_.isComplete = !_.isComplete
-				dbTodo.changeTodo(this.listData[i])
+				dbTodo.changeTodo(this.listData[i]).then(res => {
+					if(res && res.errMsg === "document.update:ok") {
+						_.isComplete = !_.isComplete
+					}
+				})
 			},
 
 			// 如果打开一个的时候，不需要关闭其他，则无需实现本方法
@@ -140,24 +155,49 @@
 					if (index != idx) this.listData[idx].show = false;
 				})
 			},
-			
-			
+
+
 
 			onConfirm() {
 				this.listData[this.editIndex].text = this.content
 				dbTodo.changeTodo(this.listData[this.editIndex])
 				this.listData[this.editIndex].show = false
+			},
+			
+			_setCount() {
+				const allCount = this.todos.length,
+				nCount = this.todos.filter(t => !t.isComplete).length,
+				yCount = this.todos.filter(t => t.isComplete).length;
+				this.$set(this.classify[0], 'count', allCount)
+				this.$set(this.classify[1], 'count',yCount )
+				this.$set(this.classify[2], 'count', nCount)
+			},
+
+			getList() {
+				dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
+					console.log(res.data)
+					this.todos = res.data.map(i => {
+						i.show = false
+						return i
+					})
+					//  设置badge 数量
+					this._setCount()
+				})
+			},
+		},
+		
+		watch: {
+			todos: {
+				deep: true,
+				handler(val) {
+					this._setCount()
+				}
 			}
 		},
 
-		onShow() {
-			dbTodo.getTodos(this.$store.openid).then(res => {
-				console.log(res.data)
-				this.todos = res.data.map(i => {
-					i.show = false
-					return i
-				})
-			})
+		created() {
+			this._setCount()
+			// this.getList()
 		}
 	}
 </script>
@@ -171,14 +211,14 @@
 		height: 100%;
 	}
 
-	
-	
-	
+
+
+
 	.list {
 		flex: 1;
 		align-items: center;
 		overflow-y: auto;
-		/* padding: 20rpx; */
+		padding: 20rpx;
 	}
 
 	.item {
@@ -212,19 +252,19 @@
 		color: $u-content-color;
 		padding: 30rpx;
 	}
-	
+
 	.flex {
 		display: flex;
 	}
-	
+
 	.flex1 {
 		flex: 1;
 	}
-	
+
 	.mr10 {
 		margin-right: 10rpx;
 	}
-	
+
 	.ml10 {
 		margin-left: 10rpx;
 	}

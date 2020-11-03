@@ -39,6 +39,15 @@
 	display: flex;
 }
 
+.fc {
+	display: flex;
+	flex-direction: column;
+}
+
+.fr {
+	display: flex;
+	flex-direction: row;
+}
 
 .br10 {
 	border-radius: 10rpx;

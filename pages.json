@@ -24,7 +24,7 @@
 			}
 		},
 		{
-			"path": "pages/newTodo/index",
+			"path": "pages/new-todo/index",
 			"style": {
 				"navigationBarTitleText": "新建事项"
 			}
@@ -34,8 +34,15 @@
 			"style": {
 				"navigationBarTitleText": "清单管理"
 			}
+		},
+		{
+			"path": "pages/list-detail/index",
+			"style": {
+				"navigationBarTitleText": "清单详情"
+			}
 		}
-	],
+	    
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "#FFFFFF",
 		"navigationBarTitleText": "uni-app",
