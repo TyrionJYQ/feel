@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<view class="fc f1">
 		<u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
-		<view class="list f1 br10 mtb15 bg-white over-auto br10 flex">
+		<view class="mtb15 bg-white over-auto br10 f1">
 			<template v-if="listData.length > 0">
 				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
 				 :options="options">
@@ -30,31 +30,33 @@
 		props: {
 			todos: {
 				type: Array,
-				default() {
+				default () {
 					return []
 				}
+			},
+
+			current: {
+				type: Number,
+				default: 0
 			}
 		},
 		data() {
 			return {
 				show: false,
-				// todos: [],
 				classify: [{
 					name: '全部',
-					
+
 
 				}, {
 					name: '已完成',
-					
+
 				}, {
 					name: '待办',
-					
+
 				}],
 
 				content: '',
 				editIndex: 0,
-
-				current: 0,
 				scrollTop: 0,
 				old: {
 					scrollTop: 0
@@ -95,7 +97,7 @@
 		},
 		methods: {
 			change(index) {
-				this.current = index;
+				this.$emit('tab-change', index)
 			},
 
 			goToNewPage() {
@@ -142,7 +144,7 @@
 			onClickItem(i) {
 				let _ = this.listData[i]
 				dbTodo.changeTodo(this.listData[i]).then(res => {
-					if(res && res.errMsg === "document.update:ok") {
+					if (res && res.errMsg === "document.update:ok") {
 						_.isComplete = !_.isComplete
 					}
 				})
@@ -163,29 +165,19 @@
 				dbTodo.changeTodo(this.listData[this.editIndex])
 				this.listData[this.editIndex].show = false
 			},
-			
+
 			_setCount() {
 				const allCount = this.todos.length,
-				nCount = this.todos.filter(t => !t.isComplete).length,
-				yCount = this.todos.filter(t => t.isComplete).length;
+					nCount = this.todos.filter(t => !t.isComplete).length,
+					yCount = this.todos.filter(t => t.isComplete).length;
 				this.$set(this.classify[0], 'count', allCount)
-				this.$set(this.classify[1], 'count',yCount )
+				this.$set(this.classify[1], 'count', yCount)
 				this.$set(this.classify[2], 'count', nCount)
 			},
 
-			getList() {
-				dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
-					console.log(res.data)
-					this.todos = res.data.map(i => {
-						i.show = false
-						return i
-					})
-					//  设置badge 数量
-					this._setCount()
-				})
-			},
+			
 		},
-		
+
 		watch: {
 			todos: {
 				deep: true,
@@ -216,7 +208,7 @@
 
 	.list {
 		flex: 1;
-		align-items: center;
+		/* align-items: center; */
 		overflow-y: auto;
 		padding: 20rpx;
 	}

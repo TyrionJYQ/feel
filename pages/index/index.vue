@@ -1,28 +1,28 @@
 <template>
 	<view class="content bg-color m15">
 		<view class="text-area">
-		首页
+			首页
 		</view>
 	</view>
 </template>
 
 <script>
-	import { mapActions  } from 'vuex'
+	import {
+		mapActions
+	} from 'vuex'
 	import uCharts from '@/components/u-charts/u-charts.js';
+
 	const app = getApp()
+
 	export default {
-		data() {
-			return {
-				
-			}
-		},
-		
+
 		onLoad() {
-				this.getUserOpenId()
+			this.getUserOpenId()
+
 		},
-		
+
 		methods: {
-			...mapActions(['getUserOpenId'])
+			...mapActions(['getUserOpenId', ])
 		}
 	}
 </script>

@@ -1,37 +1,19 @@
 <template>
 	<view class="wrapper">
-	<!-- <view> -->
-		<!-- <u-tabs :list="classify" :is-scroll="false" :current="current" @change="change" active-color="#19be6b" class="tab"></u-tabs>
-		<view class="list f1 br10 mtb15 bg-white over-auto br10">
-			<template v-if="listData.length > 0">
-				<u-swipe-action :show="i.show" :index="index" v-for="(i, index) in listData" :key="i._id" @click="click" @open="open"
-				 :options="options">
-					<view class="u-border-bottom">
-						<view class="item title-wrap" @click="onClickItem(index)">
-							<u-checkbox v-model="i.isComplete" shape="circle" active-color="#19be6b"></u-checkbox>
-							<text class="title line-1"  :class="{'line': i.isComplete}">{{i.text}}</text>
-						</view>
-					</view>
-				</u-swipe-action>
-			</template>
-			<u-empty text="没有数据" mode="list" v-else icon-color="#19be6b" color="#19be6b"></u-empty>
+		<feel-todo-list class="f1 fc" @tab-change="changeTab" :current="current" :todos="listData" />
+		<view>
+			<u-button type="success" @click="goToNewPage">新建</u-button>
 		</view>
-		<view class="flex">
-			<view class="flex1 mr10">
-				<u-button type="success" @click="goToNewPage">新建</u-button>
-			</view>
-		</view>
-		<u-modal v-model="show" :title-style="{color: 'red'}" show-cancel-button @confirm="onConfirm" title="编辑">
-			<view class="slot-content">
-				<u-input v-model="content"></u-input>
-			</view>
-		</u-modal> -->
-		<feel-todo-list/>
 	</view>
 </template>
 
 <script>
 	import dbTodo from '../../utils/dbTodo.js'
+	import {
+		mapGetters,
+		mapActions
+	} from 'vuex'
+	// import dbTodo from '../../utils/dbTodo.js'
 	export default {
 		data() {
 			return {
@@ -46,7 +28,6 @@
 
 				content: '',
 				editIndex: 0,
-				todos: [],
 				current: 0,
 				scrollTop: 0,
 				old: {
@@ -70,19 +51,26 @@
 		},
 
 		computed: {
+			...mapGetters(['todosCompleted', 'todosUnCompleted']),
+
+			todos() {
+				debugger
+				return this.$store.state.todoList
+			},
 			listData() {
 				switch (this.current) {
 					case 0:
 						return this.todos
 					case 1:
-						return this.todos.filter(todo => todo.isComplete)
+						return this.todosCompleted
 					case 2:
-						return this.todos.filter(todo => !todo.isComplete)
+						return this.todosUnCompleted
 				}
 			}
 		},
 		methods: {
-			change(index) {
+			...mapActions(['getTodoList']),
+			changeTab(index) {
 				this.current = index;
 			},
 
@@ -91,7 +79,7 @@
 					url: '/pages/new-todo/index'
 				})
 			},
-			
+
 			goToList() {
 				wx.navigateTo({
 					url: '/pages/list/index'
@@ -105,15 +93,15 @@
 					this._edit(index)
 				}
 			},
-			
+
 			// 编辑
 			_edit(i) {
 				this.editIndex = i
 				this.content = this.listData[i].text
 				this.show = true
 			},
-			
-			
+
+
 			// 删除
 			_del(item) {
 				const i = this.todos.findIndex(t => t._id === item._id)
@@ -121,11 +109,11 @@
 				dbTodo.delTodoById(this.listData[i]._id)
 				// 物理删除
 				this.todos.splice(i, 1)
-				
+
 			},
-			
-			
-			
+
+
+
 
 			onClickItem(i) {
 				let _ = this.listData[i]
@@ -140,8 +128,8 @@
 					if (index != idx) this.listData[idx].show = false;
 				})
 			},
-			
-			
+
+
 
 			onConfirm() {
 				this.listData[this.editIndex].text = this.content
@@ -151,12 +139,13 @@
 		},
 
 		onShow() {
-			dbTodo.getTodos(this.$store.openid).then(res => {
-				console.log(res.data)
-				this.todos = res.data.map(i => {
+			dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
+				debugger
+				const todos = res.data.map(i => {
 					i.show = false
 					return i
 				})
+				this.getTodoList(todos)
 			})
 		}
 	}
@@ -171,9 +160,9 @@
 		height: 100%;
 	}
 
-	
-	
-	
+
+
+
 	.list {
 		flex: 1;
 		align-items: center;
@@ -212,19 +201,19 @@
 		color: $u-content-color;
 		padding: 30rpx;
 	}
-	
+
 	.flex {
 		display: flex;
 	}
-	
+
 	.flex1 {
 		flex: 1;
 	}
-	
+
 	.mr10 {
 		margin-right: 10rpx;
 	}
-	
+
 	.ml10 {
 		margin-left: 10rpx;
 	}
