@@ -1,6 +1,6 @@
 <template>
 	<view class="wrapper">
-		<feel-todo-list class="f1 fc" @tab-change="changeTab" :current="current" :todos="listData" />
+		<feel-todo-list class="f1 fc" @todo-refresh="refreshTodo" :current="current" :todos="listData" />
 		<view>
 			<u-button type="success" @click="goToNewPage">新建</u-button>
 		</view>
@@ -54,7 +54,6 @@
 			...mapGetters(['todosCompleted', 'todosUnCompleted']),
 
 			todos() {
-				debugger
 				return this.$store.state.todoList
 			},
 			listData() {
@@ -70,8 +69,15 @@
 		},
 		methods: {
 			...mapActions(['getTodoList']),
-			changeTab(index) {
-				this.current = index;
+			
+			refreshTodo(index) {
+				dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
+					const todos = res.data.map(i => {
+						i.show = false
+						return i
+					})
+					this.getTodoList(todos)
+				})
 			},
 
 			goToNewPage() {
