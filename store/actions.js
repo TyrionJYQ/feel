@@ -63,5 +63,9 @@ export default {
 	// 设置当前清单列表
 	getTodoList({commit}, list) {
 		commit(types.GET_TODO_LIST, list)
+	},
+	
+	async delTodoItem({commit}, i) {
+		commit(types.DEL_TODO_ITEM, i)
 	}
 }

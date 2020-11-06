@@ -42,7 +42,7 @@ class DbTodo {
 		changeTodo(i) {
 			return this.db.doc(i._id).update({
 				data: {
-					isComplete: i.isComplete,
+					isComplete: !i.isComplete,
 					text: i.text,
 					list: i.list,
 					date: i.date,

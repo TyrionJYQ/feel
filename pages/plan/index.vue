@@ -146,7 +146,7 @@
 
 		onShow() {
 			dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
-				debugger
+				
 				const todos = res.data.map(i => {
 					i.show = false
 					return i

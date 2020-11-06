@@ -53,7 +53,7 @@
 					name: '待办',
 
 				}],
-				current:0,
+				current: 0,
 				content: '',
 				editIndex: 0,
 				scrollTop: 0,
@@ -86,7 +86,7 @@
 						return this.todos
 					case 1:
 						return this.todosCompleted
-					default: 
+					default:
 						return this.todosUnCompleted
 				}
 			},
@@ -96,6 +96,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['delTodoItem']),
 			change(index) {
 				this.current = index
 				this.$emit('tab-change', index)
@@ -135,8 +136,9 @@
 				// 从服务端删除
 				dbTodo.delTodoById(this.listData[i]._id)
 				// 物理删除
-				this.todos.splice(i, 1)
-
+				// this.todos.splice(i, 1)
+				this.delTodoItem(i)
+					
 			},
 
 
@@ -146,11 +148,8 @@
 				let _ = this.listData[i]
 				dbTodo.changeTodo(this.listData[i]).then(res => {
 					if (res && res.errMsg === "document.update:ok") {
-						_.isComplete = !_.isComplete
+						this.$emit('todo-refresh')
 					}
-				}).then(() => {
-					// 重新获取数据
-					this.$emit('todo-refresh')
 				})
 			},
 
@@ -179,7 +178,7 @@
 				this.$set(this.classify[2], 'count', nCount)
 			},
 
-			
+
 		},
 
 		watch: {
