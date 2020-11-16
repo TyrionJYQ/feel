@@ -20,8 +20,18 @@ export default {
 		state.listData = listData
 	},
 	
+	// 设置清单列表
+	[types.SET_CURRENT_LIST](state, currentList) {
+		state.currentList = currentList
+	},
+	
 	// 获取待办事项
 	[types.GET_TODO_LIST](state, todoList) {
 		state.todoList = todoList
+	},
+	
+	// 刪除待办事项
+	[types.DEL_TODO_ITEM](state, i) {
+		state.todoList.splice(i, 1)
 	}
 }

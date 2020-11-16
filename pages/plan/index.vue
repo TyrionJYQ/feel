@@ -1,6 +1,6 @@
 <template>
 	<view class="wrapper">
-		<feel-todo-list class="f1 fc" @tab-change="changeTab" :current="current" :todos="listData" />
+		<feel-todo-list class="f1 fc" @todo-refresh="refreshTodo" :current="current" :todos="listData" />
 		<view>
 			<u-button type="success" @click="goToNewPage">新建</u-button>
 		</view>
@@ -51,10 +51,7 @@
 		},
 
 		computed: {
-			...mapGetters(['todosCompleted', 'todosUnCompleted']),
-
 			todos() {
-				debugger
 				return this.$store.state.todoList
 			},
 			listData() {
@@ -70,8 +67,15 @@
 		},
 		methods: {
 			...mapActions(['getTodoList']),
-			changeTab(index) {
-				this.current = index;
+			
+			refreshTodo(index) {
+				dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
+					const todos = res.data.map(i => {
+						i.show = false
+						return i
+					})
+					this.getTodoList(todos)
+				})
 			},
 
 			goToNewPage() {
@@ -86,51 +90,6 @@
 				})
 			},
 
-			click(index, index1) {
-				if (index1 == 1) {
-					this._del(this.listData[index])
-				} else {
-					this._edit(index)
-				}
-			},
-
-			// 编辑
-			_edit(i) {
-				this.editIndex = i
-				this.content = this.listData[i].text
-				this.show = true
-			},
-
-
-			// 删除
-			_del(item) {
-				const i = this.todos.findIndex(t => t._id === item._id)
-				// 从服务端删除
-				dbTodo.delTodoById(this.listData[i]._id)
-				// 物理删除
-				this.todos.splice(i, 1)
-
-			},
-
-
-
-
-			onClickItem(i) {
-				let _ = this.listData[i]
-				_.isComplete = !_.isComplete
-				dbTodo.changeTodo(this.listData[i])
-			},
-
-			// 如果打开一个的时候，不需要关闭其他，则无需实现本方法
-			open(index) {
-				this.listData[index].show = true;
-				this.listData.map((val, idx) => {
-					if (index != idx) this.listData[idx].show = false;
-				})
-			},
-
-
-
 			onConfirm() {
 				this.listData[this.editIndex].text = this.content
 				dbTodo.changeTodo(this.listData[this.editIndex])
@@ -140,7 +99,6 @@
 
 		onShow() {
 			dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
-				debugger
 				const todos = res.data.map(i => {
 					i.show = false
 					return i

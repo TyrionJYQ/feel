@@ -26,6 +26,10 @@
 
 <script>
 	import dbTodo from '../../utils/dbTodo.js'
+	import {
+		mapGetters,
+		mapActions
+	} from 'vuex'
 	export default {
 		props: {
 			todos: {
@@ -34,11 +38,6 @@
 					return []
 				}
 			},
-
-			current: {
-				type: Number,
-				default: 0
-			}
 		},
 		data() {
 			return {
@@ -54,7 +53,7 @@
 					name: '待办',
 
 				}],
-
+				current: 0,
 				content: '',
 				editIndex: 0,
 				scrollTop: 0,
@@ -80,14 +79,22 @@
 
 
 		computed: {
+			todosCompleted(state) {
+				return this.todos.filter(todo => todo.isComplete)
+			},
+
+			todosUnCompleted(state) {
+				return this.todos.filter(todo => !todo.isComplete)
+			},
+
 			listData() {
 				switch (this.current) {
 					case 0:
 						return this.todos
 					case 1:
-						return this.todos.filter(todo => todo.isComplete)
-					case 2:
-						return this.todos.filter(todo => !todo.isComplete)
+						return this.todosCompleted
+					default:
+						return this.todosUnCompleted
 				}
 			},
 
@@ -96,7 +103,9 @@
 			}
 		},
 		methods: {
+			...mapActions(['delTodoItem']),
 			change(index) {
+				this.current = index
 				this.$emit('tab-change', index)
 			},
 
@@ -134,7 +143,8 @@
 				// 从服务端删除
 				dbTodo.delTodoById(this.listData[i]._id)
 				// 物理删除
-				this.todos.splice(i, 1)
+				// this.todos.splice(i, 1)
+				this.delTodoItem(i)
 
 			},
 
@@ -145,7 +155,7 @@
 				let _ = this.listData[i]
 				dbTodo.changeTodo(this.listData[i]).then(res => {
 					if (res && res.errMsg === "document.update:ok") {
-						_.isComplete = !_.isComplete
+						this.$emit('todo-refresh')
 					}
 				})
 			},
@@ -168,14 +178,14 @@
 
 			_setCount() {
 				const allCount = this.todos.length,
-					nCount = this.todos.filter(t => !t.isComplete).length,
-					yCount = this.todos.filter(t => t.isComplete).length;
+					nCount = this.todosUnCompleted.length,
+					yCount = this.todosCompleted.length;
 				this.$set(this.classify[0], 'count', allCount)
 				this.$set(this.classify[1], 'count', yCount)
 				this.$set(this.classify[2], 'count', nCount)
 			},
 
-			
+
 		},
 
 		watch: {

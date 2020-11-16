@@ -1,10 +1,6 @@
-const getters ={
-    todosCompleted(state){
-       	return state.todoList.filter(todo => todo.isComplete)
-    },
-		
-		todosUnCompleted(state){
-		   	return state.todoList.filter(todo => !todo.isComplete)
-		}
+const getters = {
+	listTodos(state) {
+		return state.todoList.filter(todo => todo.list && todo.list._id === state.list._id)
+	}
 }
 export default getters;
