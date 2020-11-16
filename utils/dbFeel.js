@@ -4,19 +4,22 @@ class DbFeel {
 	}
 
 	// 插入记录
-	addFeel(param) {
+	addFeel(param, isUpdate) {
 			const {
 				feel,
 				weather,
 				talk,
-				date
+				date,
+				createTime
 			} = param;
 			return this.db.collection('day_feels').add({
 				data: {
 					feel,
 					weather,
 					talk,
-					date
+					date,
+					createTime: !isUpdate ? new Date().getTime() : createTime,
+					updateTime: isUpdate ? Date.now() : ''
 				}
 			})
 		}
@@ -29,12 +32,14 @@ class DbFeel {
 				date,
 				openid
 			} = param;
+			// 更新时间
+			param.updateTime = Date.now()
 			// 先删除
 			return this.db.collection('day_feels').where({
 				_openid:openid,
 				date
 			}).remove().then(res => {
-				return this.addFeel(param)
+				return this.addFeel(param, true)
 			})
 		}
 }
