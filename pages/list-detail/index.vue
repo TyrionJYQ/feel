@@ -5,24 +5,40 @@
 				<u-dropdown-item v-model="value" :title="list.name" :options="options" @change="changeList"></u-dropdown-item>
 			</u-dropdown>
 		</view>
-		<feel-todo-list @todos="getTodos" class="f1 bg-white" ref="todos"/>
+		<feel-todo-list class="f1 fc" @todo-refresh="refreshTodo" :current="current" :todos="listData" />
 	</view>
 </template>
 
 <script>
-	import {mapActions} from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
+	import dbTodo from '../../utils/dbTodo.js'
 	export default {
 		data() {
 			return {
-				todos: [],
 				value: this.$store.state.list._id,
-				
+				current: 0,
 			}
 		},
 
 		computed: {
+			...mapGetters(['listTodos']),
 			list() {
 				return this.$store.state.list
+			},
+			
+			todos() {
+				
+			},
+			
+			listData() {
+				switch (this.current) {
+					case 0:
+						return this.listTodos
+					case 1:
+						return this.listTodos
+					case 2:
+						return this.listTodos
+				}
 			},
 			
 			options() {
@@ -36,7 +52,17 @@
 		},
 
 		methods: {
-			...mapActions(['setList']),
+			...mapActions(['setList', 'getTodoList']),
+			
+			refreshTodo(index) {
+				dbTodo.getTodos(this.$store.state.openid, this.listId).then(res => {
+					const todos = res.data.map(i => {
+						i.show = false
+						return i
+					})
+					this.getTodoList(todos)
+				})
+			},
 			
 			getTodos(todos) {
 				this.todos = todos
@@ -44,8 +70,17 @@
 			
 			changeList(id) {
 				this.setList(this.$store.state.listData.find(i => i._id === id))
-				this.$refs.todos.getList()
 			}
+		},
+		
+		onShow() {
+			dbTodo.getTodos(this.$store.state.openid).then(res => {
+				const todos = res.data.map(i => {
+					i.show = false
+					return i
+				})
+				this.getTodoList(todos)
+			})
 		}
 	}
 </script>

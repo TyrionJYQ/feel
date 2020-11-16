@@ -26,15 +26,11 @@ class DbTodo {
 		
 		
 		// 根据状态获取待办事项
-		getTodos(_openid, listId) {
+		getTodos(_openid) {
 			let params = {
 				_openid,
 			}
-			if(listId) {
-				params.list = {
-					_id: listId
-				}
-			}
+			
 			return this.db.where(params).get()
 		}
 		

@@ -79,7 +79,14 @@
 
 
 		computed: {
-			...mapGetters(['todosCompleted', 'todosUnCompleted']),
+			todosCompleted(state) {
+				return this.todos.filter(todo => todo.isComplete)
+			},
+
+			todosUnCompleted(state) {
+				return this.todos.filter(todo => !todo.isComplete)
+			},
+
 			listData() {
 				switch (this.current) {
 					case 0:
@@ -138,7 +145,7 @@
 				// 物理删除
 				// this.todos.splice(i, 1)
 				this.delTodoItem(i)
-					
+
 			},
 
 
