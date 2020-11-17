@@ -1,5 +1,5 @@
 <template>
-	<view class="content bg-color m15">
+	<view class="content bg-color">
 		<view class="text-area">
 			首页
 		</view>
@@ -10,29 +10,58 @@
 	import {
 		mapActions
 	} from 'vuex'
+	import dbFeel from '../../utils/dbFeel'
+	import dbTodo from '../../utils/dbTodo'
+	import dbList from '../../utils/dbList.js'
 	import uCharts from '@/components/u-charts/u-charts.js';
 
 	const app = getApp()
 
 	export default {
-
-		onLoad() {
-			this.getUserOpenId()
-
+		async onLoad() {
+			const openid = await this.getUserOpenId()
+			// 心情
+			const feelRes = await dbFeel.getFeels({
+				openid
+			})
+			this.setYearFeels(feelRes.errMsg === "collection.get:ok" ? feelRes.data : [])
+			// 待办
+			const todoRes = await dbTodo.getTodos(openid)
+			const todos = todoRes.data && todoRes.data.map(i => {
+				i.show = false
+				return i
+			})
+			this.getTodoList(todos)
+			// 清单
+			const listRes = await dbList.getList(openid)
+			if (listRes.errMsg === 'collection.get:ok') {
+				listRes.data = listRes.data.map(i => {
+					i.show = false;
+					return i
+				})
+				this.setListData(listRes.data)
+			}
 		},
 
 		methods: {
-			...mapActions(['getUserOpenId', ])
+			...mapActions(['getUserOpenId', 'setYearFeels', 'getTodoList', 'setListData'])
 		}
 	}
 </script>
 
 <style>
+	page {
+		height: 100%;
+	}
 	.content {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		height: 100vh;
+		padding: 15rpx;
+		box-sizing: border-box;
+		
 	}
 
 	.logo {
@@ -44,10 +73,7 @@
 		margin-bottom: 50rpx;
 	}
 
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
+	
 
 	.title {
 		font-size: 36rpx;

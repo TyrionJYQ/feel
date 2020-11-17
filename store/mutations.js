@@ -33,5 +33,10 @@ export default {
 	// 刪除待办事项
 	[types.DEL_TODO_ITEM](state, i) {
 		state.todoList.splice(i, 1)
+	},
+	
+	// 设置年度心情
+	[types.SET_YEARS_FEEL](state, list) {
+		state.feelList = list
 	}
 }

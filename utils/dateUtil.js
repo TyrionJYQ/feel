@@ -1,3 +1,5 @@
+var dayjs = require('dayjs')
+
 const dateToString = date =>  {
 		const year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -13,3 +15,11 @@ const dateToString = date =>  {
 		return year + "-" + month + "-" + day;
   }
 export default dateToString
+
+
+const sTime = dayjs().startOf('year')
+const eTime = dayjs().endOf('year')
+export const yearTime = {
+	startTime: +sTime,
+	endTime: +eTime
+}

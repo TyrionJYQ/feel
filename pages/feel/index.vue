@@ -165,6 +165,10 @@
 					this.form.talk = d.talk
 				}
 			})
+			
+			dbFeel.getFeels({
+				openid: this.$store.state.openid
+			})
 		},
 
 		onReady() {

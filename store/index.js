@@ -14,6 +14,7 @@ const store = new Vuex.Store({
 		list: Object.create(null), //选中清单
 		listData: [], // 所有清单
 		todoList: [], // 所有待办任务
+		feelList: []
 	},
 	getters,
 	mutations,
