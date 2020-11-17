@@ -2,11 +2,11 @@ import * as types from './mutation-types'
 import dateToString from '../utils/dateUtil'
 
 export default {
-	async getUserOpenId({
+	getUserOpenId({
 		commit,
 		state
 	}) {
-		return await new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			if (state.openid) return resolve(state.openid)
 			wx.cloud.callFunction({
 				name: 'login',
@@ -16,6 +16,7 @@ export default {
 						openid
 					} = res.result
 					commit(types.SET_OPEN_ID, openid)
+					resolve(openid)
 				}
 			})
 
@@ -67,5 +68,10 @@ export default {
 	
 	async delTodoItem({commit}, i) {
 		commit(types.DEL_TODO_ITEM, i)
+	},
+	
+	// 设置年度待办
+	setYearFeels({commit}, data) {
+		commit(types.SET_YEARS_FEEL, data)
 	}
 }

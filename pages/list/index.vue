@@ -141,11 +141,8 @@
 			delListItem() {
 
 			}
-
-		},
-		onShow() {
-			this.getList()
 		}
+		
 	}
 </script>
 

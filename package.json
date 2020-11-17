@@ -1,0 +1,23 @@
+{
+  "name": "feel",
+  "version": "1.0.0",
+  "description": "mini program feel",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TyrionJYQ/feel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TyrionJYQ/feel/issues"
+  },
+  "homepage": "https://github.com/TyrionJYQ/feel#readme",
+  "dependencies": {
+    "dayjs": "^1.9.6"
+  }
+}
