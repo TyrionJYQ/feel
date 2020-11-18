@@ -185,4 +185,8 @@
 		height: 100vh;
 		justify-items: flex-end;
 	}
+	
+	.jl {
+		justify-content: left;
+	}
 </style>
